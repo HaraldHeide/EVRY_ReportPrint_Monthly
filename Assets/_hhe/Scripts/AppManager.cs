@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using RESTClient;
 using Azure.StorageServices;
+using ChartAndGraph;
 using System;
+using Random = UnityEngine.Random;
 
 public class AppManager : MonoBehaviour
 {
@@ -20,6 +22,9 @@ public class AppManager : MonoBehaviour
 
     public string myData = "";
 
+    [Header("BarChart")]
+    [SerializeField]
+    Material[] materials;
     class myItem
     {
         public int YearMonth;
@@ -76,12 +81,53 @@ public class AppManager : MonoBehaviour
             item.Envelopes = Int32.Parse(fields[2]);
             myList.Add(item);
         }
-        Visualize(myList);
+        BarChartFeed(myList);
     }
 
-    private void Visualize(List<myItem> myList)
+    private void BarChartFeed(List<myItem> myList)
     {
+        BarChart barChart = GetComponent<BarChart>();
+        if (barChart != null)
+        {
+            barChart.DataSource.ClearCategories();
+            barChart.DataSource.ClearGroups();
+            barChart.DataSource.ClearValues();
 
+            barChart.DataSource.StartBatch();
+
+
+            string oldCustomer = "";
+            int countCustomers = -1;
+            foreach (myItem item in myList)
+            {
+                string customer = item.Customer;
+                double envelopes = (double)item.Envelopes / 100000;
+                int YearMonth = item.YearMonth;
+
+                if (oldCustomer != customer)
+                {
+                    oldCustomer = customer;
+                    countCustomers++;
+                    barChart.DataSource.AddCategory(customer, materials[countCustomers]);
+                }
+                if(countCustomers == 0)
+                { 
+                    barChart.DataSource.AddGroup(YearMonth.ToString());
+                }
+                barChart.DataSource.SetValue(customer, YearMonth.ToString(), envelopes);
+                barChart.DataSource.SlideValue(customer, YearMonth.ToString(), envelopes, 40f);
+
+                //barChart.DataSource.SetValue(customer, YearMonth.ToString(), countCustomers + 2);
+                //barChart.DataSource.SlideValue(customer, YearMonth.ToString(), countCustomers + 2, 40f);
+            }
+            barChart.DataSource.EndBatch();
+        }
 
     }
+
+
+    //barChart.DataSource.SetValue(customer, "Value 1", Random.value * 20);
+    //barChart.DataSource.SlideValue("Player 2", "Value 1", Random.value * 20, 40f);
+    ////graph.DataSource.AddPointToCategory("Player 1", Random.value * 10f, Random.value * 10f);
+
 }
