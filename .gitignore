@@ -5,6 +5,7 @@
 [Bb]uilds/
 Assets/AssetStoreTools*
 
+
 # Visual Studio cache directory
 .vs/
 
@@ -42,4 +43,6 @@ Packages/
 Logs/
 Standard Assets/
 TextMesh Pro/
+Assets/3D-Bfont-NO/
+Assets/GoogleARCore/
 *.meta

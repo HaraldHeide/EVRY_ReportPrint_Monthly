@@ -5,10 +5,12 @@ using RESTClient;
 using Azure.StorageServices;
 using ChartAndGraph;
 using System;
+using TMPro;
 using Random = UnityEngine.Random;
 
 public class AppManager : MonoBehaviour
 {
+    public TMPro.TMP_Text  Message;
     [Header("Azure Storage Service")]
     [SerializeField]
     private string storageAccount = "hhestorageaccount";
@@ -36,6 +38,7 @@ public class AppManager : MonoBehaviour
 
     void Start()
     {
+        Message.text = "Starting...";
         if (string.IsNullOrEmpty(storageAccount) || string.IsNullOrEmpty(accessKey))
         {
             //Log.Text(label, "Storage account and access key are required", "Enter storage account and access key in Unity Editor", Log.Level.Error);
